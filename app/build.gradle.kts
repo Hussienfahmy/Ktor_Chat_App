@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -8,12 +10,12 @@ plugins {
 
 android {
     namespace = "com.h_fahmy.chat"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.h_fahmy.chat"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -24,7 +26,23 @@ android {
     }
 
     buildTypes {
+        debug {
+            val httpProtocol : String = gradleLocalProperties(rootDir).getProperty("http_protocol") ?: ""
+            buildConfigField("String", "HttpProtocol", "\"$httpProtocol\"")
+            val serverIP: String = gradleLocalProperties(rootDir).getProperty("server_ip") ?: ""
+            buildConfigField("String", "ServerIP", "\"$serverIP\"")
+            val serverPort : String = gradleLocalProperties(rootDir).getProperty("server_port") ?: ""
+            buildConfigField("String", "ServerPort", "\"$serverPort\"")
+        }
+
         release {
+            val httpProtocol : String = gradleLocalProperties(rootDir).getProperty("http_protocol") ?: ""
+            buildConfigField("String", "HttpProtocol", "\"$httpProtocol\"")
+            val serverIP: String = gradleLocalProperties(rootDir).getProperty("server_ip") ?: ""
+            buildConfigField("String", "ServerIP", "\"$serverIP\"")
+            val serverPort : String = gradleLocalProperties(rootDir).getProperty("server_port") ?: ""
+            buildConfigField("String", "ServerPort", "\"$serverPort\"")
+
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -33,14 +51,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -72,7 +91,6 @@ dependencies {
     // Hilt
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     kapt("androidx.hilt:hilt-compiler:1.0.0")
     // Ktor
@@ -81,7 +99,13 @@ dependencies {
     implementation("io.ktor:ktor-client-serialization:2.3.4")
     implementation("io.ktor:ktor-client-websockets:2.3.4")
     implementation("io.ktor:ktor-client-logging:2.3.4")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.4")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.4")
     implementation("ch.qos.logback:logback-classic:1.4.11")
+
+    // Coroutine
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
 
     testImplementation("junit:junit:4.13.2")
 
