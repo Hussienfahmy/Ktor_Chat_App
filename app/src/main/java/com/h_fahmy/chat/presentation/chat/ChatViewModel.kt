@@ -73,7 +73,10 @@ class ChatViewModel @Inject constructor(
 
     fun sendMessage() {
         viewModelScope.launch {
-            if (messageText.isNotBlank()) chatSocketService.sendMessage(messageText)
+            if (messageText.isNotBlank()) {
+                chatSocketService.sendMessage(messageText)
+                messageText = ""
+            }
         }
     }
 
