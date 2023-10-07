@@ -5,7 +5,10 @@ import com.h_fahmy.chat.data.remote.dto.MessageDTO
 import com.h_fahmy.chat.domain.model.Message
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.webSocketSession
+import io.ktor.client.request.accept
+import io.ktor.client.request.headers
 import io.ktor.client.request.url
+import io.ktor.http.ContentType
 import io.ktor.websocket.Frame
 import io.ktor.websocket.WebSocketSession
 import io.ktor.websocket.close
@@ -29,7 +32,10 @@ class ChatSocketServiceImpl(
     override suspend fun initSession(userName: String): Result<Unit> {
         return try {
             socket = client.webSocketSession {
-                url("${ChatSocketService.EndPoints.ChatSocketRoute.url}?userName=$userName")
+                url("${ChatSocketService.EndPoints.ChatSocketRoute.url}?username=$userName")
+                headers {
+                    accept(ContentType.Application.Json)
+                }
             }
             if (socket?.isActive == true) {
                 Result.success(Unit)
