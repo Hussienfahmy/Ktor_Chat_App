@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.h_fahmy.chat.presentation.chat.ChatScreen
-import com.h_fahmy.chat.presentation.username.UsernameScreen
+import com.h_fahmy.chat.presentation.username.RoomsScreen
 import com.h_fahmy.chat.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,27 +18,31 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyApplicationTheme {
+            MyApplicationTheme(darkTheme = false) {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
                     startDestination = "username_screen"
                 ) {
                     composable("username_screen") {
-                        UsernameScreen(onNavigate = navController::navigate)
+                        RoomsScreen(onNavigate = navController::navigate)
                     }
 
                     composable(
-                        route = "chat_screen/{username}",
+                        route = "chat_screen/{roomId}/{username}",
                         arguments = listOf(
                             navArgument(name = "username") {
                                 type = NavType.StringType
                                 nullable = true
+                            },
+                            navArgument(name = "roomId") {
+                                type = NavType.StringType
+                                nullable = false
                             }
                         )
                     ) { backStackEntry ->
                         val username = backStackEntry.arguments?.getString("username")
-                        ChatScreen(username = username,)
+                        ChatScreen(username = username)
                     }
                 }
             }
