@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -76,45 +77,51 @@ fun ChatScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            reverseLayout = true,
-        ) {
-            item {
-                Spacer(modifier = Modifier.height(32.dp))
+        if (state.isLoading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
             }
-
-            items(state.messages) { message ->
-                val isOwn = message.username == username
-                Box(
-                    contentAlignment = if (isOwn) Alignment.CenterEnd else Alignment.CenterStart,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    MessageItem(
-                        message = message,
-                        isOwn = isOwn,
-                    )
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                reverseLayout = true,
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
-                Spacer(modifier = Modifier.height(32.dp))
+
+                items(state.messages) { message ->
+                    val isOwn = message.username == username
+                    Box(
+                        contentAlignment = if (isOwn) Alignment.CenterEnd else Alignment.CenterStart,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        MessageItem(
+                            message = message,
+                            isOwn = isOwn,
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
             }
-        }
 
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            TextField(
-                value = viewModel.messageText,
-                onValueChange = viewModel::onMessageChanged,
-                placeholder = {
-                    Text(text = "Enter a message...")
-                },
-                modifier = Modifier.weight(1f)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextField(
+                    value = viewModel.messageText,
+                    onValueChange = viewModel::onMessageChanged,
+                    placeholder = {
+                        Text(text = "Enter a message...")
+                    },
+                    modifier = Modifier.weight(1f)
+                )
 
-            IconButton(onClick = viewModel::sendMessage) {
-                Icon(imageVector = Icons.Default.Send, contentDescription = "send")
+                IconButton(onClick = viewModel::sendMessage) {
+                    Icon(imageVector = Icons.Default.Send, contentDescription = "send")
+                }
             }
         }
     }
@@ -145,10 +152,10 @@ fun MessageItem(
                         close()
                     }
                 }
-                drawPath(path = trianglePath, color = if (isOwn) Color.Green else Color.DarkGray)
+                drawPath(path = trianglePath, color = if (isOwn) Color.Blue else Color.DarkGray)
             }
             .background(
-                color = if (isOwn) Color.Green else Color.DarkGray,
+                color = if (isOwn) Color.Blue else Color.DarkGray,
                 shape = RoundedCornerShape(10.dp)
             )
             .padding(8.dp)
