@@ -34,21 +34,22 @@ class ChatViewModel @Inject constructor(
 
     fun connectToChat() {
         getAllMessages()
-        savedStateHandle.get<String>("username")?.let { username ->
-            viewModelScope.launch {
-                val result = chatSocketService.initSession(username)
-                result.onFailure {
-                    _toastEvent.emit(it.message ?: "Unknown error")
-                }.onSuccess {
-                    chatSocketService.observeMessages()
-                        .onEach { message ->
-                            val newList = state.messages.toMutableList()
-                                .apply {
-                                    add(0, message)
-                                }
-                            state = state.copy(messages = newList)
-                        }.launchIn(viewModelScope)
-                }
+        val username = savedStateHandle.get<String>("username").orEmpty()
+        val roomId = savedStateHandle.get<String>("roomId").orEmpty()
+
+        viewModelScope.launch {
+            val result = chatSocketService.initSession(username, roomId)
+            result.onFailure {
+                _toastEvent.emit(it.message ?: "Unknown error")
+            }.onSuccess {
+                chatSocketService.observeMessages()
+                    .onEach { message ->
+                        val newList = state.messages.toMutableList()
+                            .apply {
+                                add(0, message)
+                            }
+                        state = state.copy(messages = newList)
+                    }.launchIn(viewModelScope)
             }
         }
     }

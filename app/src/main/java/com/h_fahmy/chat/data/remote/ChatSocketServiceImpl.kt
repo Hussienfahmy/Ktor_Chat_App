@@ -29,10 +29,10 @@ class ChatSocketServiceImpl(
 
     private var socket: WebSocketSession? = null
 
-    override suspend fun initSession(userName: String): Result<Unit> {
+    override suspend fun initSession(userName: String, roomId: String): Result<Unit> {
         return try {
             socket = client.webSocketSession {
-                url("${ChatSocketService.EndPoints.ChatSocketRoute.url}?username=$userName")
+                url(ChatSocketService.EndPoints.ChatSocketRoute(userName, roomId).url)
                 headers {
                     accept(ContentType.Application.Json)
                 }

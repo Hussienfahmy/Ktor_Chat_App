@@ -4,6 +4,8 @@ import com.h_fahmy.chat.data.remote.ChatSocketService
 import com.h_fahmy.chat.data.remote.ChatSocketServiceImpl
 import com.h_fahmy.chat.data.remote.MessageService
 import com.h_fahmy.chat.data.remote.MessageServiceImpl
+import com.h_fahmy.chat.data.remote.RoomService
+import com.h_fahmy.chat.data.remote.RoomServiceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,5 +44,11 @@ object AppModule {
     @Singleton
     fun provideChatSocketService(httpClient: HttpClient): ChatSocketService {
         return ChatSocketServiceImpl(httpClient)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRoomService(httpClient: HttpClient): RoomService {
+        return RoomServiceImpl(httpClient)
     }
 }
