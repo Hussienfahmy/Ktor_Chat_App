@@ -1,7 +1,7 @@
 package com.h_fahmy.chat.data.remote
 
 import android.util.Log
-import com.h_fahmy.chat.data.remote.dto.MessageDTO
+import com.h_fahmy.chat.data.remote.dto.ChatDto
 import com.h_fahmy.chat.domain.model.Message
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -15,14 +15,16 @@ class MessageServiceImpl(
     private val client : HttpClient,
 ): MessageService {
 
-    override suspend fun getAllMessages(): List<Message> {
+    override suspend fun getAllMessages(roomId: String): List<Message> {
         return try {
-            client.get(MessageService.EndPoints.GetAllMessages.url) {
+            client.get(MessageService.EndPoints.GetAllMessages(roomId).url) {
                 headers {
                     accept(ContentType.Application.Json)
                 }
-            }.body<List<MessageDTO>>()
-                .map { it.toMessage() }
+            }.body<ChatDto>()
+                .let { chatDto ->
+                    chatDto.messages.map { it.toMessage() }
+                }
         }catch (e: Exception) {
             Log.e(TAG, "getAllMessages: ", e)
             emptyList()

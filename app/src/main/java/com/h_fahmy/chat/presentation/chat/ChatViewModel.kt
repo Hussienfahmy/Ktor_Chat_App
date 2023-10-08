@@ -32,10 +32,11 @@ class ChatViewModel @Inject constructor(
     private val _toastEvent = MutableSharedFlow<String>()
     val toastEvent = _toastEvent.asSharedFlow()
 
+    private val username get() = savedStateHandle.get<String>("username").orEmpty()
+    private val roomId get() = savedStateHandle.get<String>("roomId").orEmpty()
+
     fun connectToChat() {
         getAllMessages()
-        val username = savedStateHandle.get<String>("username").orEmpty()
-        val roomId = savedStateHandle.get<String>("roomId").orEmpty()
 
         viewModelScope.launch {
             val result = chatSocketService.initSession(username, roomId)
@@ -67,7 +68,7 @@ class ChatViewModel @Inject constructor(
     fun getAllMessages() {
         viewModelScope.launch {
             state = state.copy(isLoading = true)
-            val result = messageService.getAllMessages()
+            val result = messageService.getAllMessages(roomId)
             state = state.copy(isLoading = false, messages = result)
         }
     }
