@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.h_fahmy.chat.presentation.chat.ChatScreen
-import com.h_fahmy.chat.presentation.username.RoomsScreen
+import com.h_fahmy.chat.presentation.rooms.RoomsScreen
 import com.h_fahmy.chat.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
