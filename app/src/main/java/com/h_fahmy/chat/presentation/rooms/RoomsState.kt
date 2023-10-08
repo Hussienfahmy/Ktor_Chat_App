@@ -1,4 +1,4 @@
-package com.h_fahmy.chat.presentation.username
+package com.h_fahmy.chat.presentation.rooms
 
 import com.h_fahmy.chat.domain.model.Room
 

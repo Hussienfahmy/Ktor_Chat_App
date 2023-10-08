@@ -1,4 +1,4 @@
-package com.h_fahmy.chat.presentation.username
+package com.h_fahmy.chat.presentation.rooms
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,6 +49,12 @@ class RoomsViewModel @Inject constructor(
             } else {
                 _toastEvent.emit("Please enter a username")
             }
+        }
+    }
+
+    fun createRoom(roomName: String){
+        viewModelScope.launch {
+            roomService.createRoom(roomName)
         }
     }
 }
