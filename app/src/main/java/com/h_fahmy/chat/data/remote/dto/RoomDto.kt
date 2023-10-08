@@ -7,11 +7,11 @@ import kotlinx.serialization.Serializable
 data class RoomDto(
     val name: String,
     val activeMembers: List<String>,
-    val id: String,
+    val _id: String,
 ) {
     fun toRoom() = Room(
         name = name,
         activeMembers = activeMembers.size,
-        id = id,
+        id = _id,
     )
 }
